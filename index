@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            color: var(--text);
+        }
+
+        .container {
+            background: var(--card);
+            width: 100%;
+            max-width: 950px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide { display: none; padding: 40px; animation: fadeIn 0.5s ease; }
+        .slide.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 2rem; color: var(--secondary); margin-bottom: 8px; text-align: center; }
+        p.subtitle { text-align: center; color: #64748b; margin-bottom: 30px; font-size: 1rem; }
+
+        /* Login */
+        .login-form { text-align: center; padding: 20px; }
+        .login-form input {
+            padding: 15px 20px;
+            width: 100%;
+            max-width: 350px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .login-form input:focus { border-color: var(--primary); }
+
+        /* Exercise 1: Appearance */
+        .appearance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .img-card {
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 5px;
+            background: #fff;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .img-card img { width: 100%; border-radius: 8px; display: block; }
+        .img-card span { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+
+        .sentences-stack { display: flex; flex-direction: column; gap: 12px; }
+        .sentence-item {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .sentence-item input {
+            width: 50px;
+            height: 45px;
+            margin-right: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        /* Exercise 2: Adjectives */
+        .word-bank {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .bank-box {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 15px;
+            flex: 1;
+            text-align: center;
+        }
+        .bank-box h4 { margin: 0 0 10px 0; font-size: 0.9rem; color: var(--secondary); }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .tag {
+            background: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .tag.used { opacity: 0.3; text-decoration: line-through; transform: scale(0.9); }
+
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #f8fafc; padding: 12px; text-align: left; font-size: 0.85rem; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        .table-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            font-weight: 600;
+        }
+
+        /* Botones */
+        .controls { text-align: center; margin-top: 30px; }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .btn:hover { background: var(--secondary); transform: translateY(-2px); }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+        .btn-success { background: var(--success); }
+
+        /* Helpers */
+        .correct { border-color: var(--success) !important; background-color: #f0fdf4 !important; }
+        .incorrect { border-color: var(--danger) !important; background-color: #fef2f2 !important; }
+
+        @media (max-width: 768px) {
+            .appearance-grid { grid-template-columns: 1fr; }
+            .slide { padding: 25px 15px; }
+            .word-bank { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- SLIDE 0: LOGIN -->
+    <div class="slide active" id="slide-0">
+        <h1>Welcome!</h1>
+        <p class="subtitle">Enter your name to start the exercises.</p>
+        <div class="login-form">
+            <input type="text" id="student-name" placeholder="Full Name" autocomplete="off">
+            <br>
+            <button class="btn" onclick="startExercises()">Start Now</button>
+        </div>
+    </div>
+
+    <!-- SLIDE 1: APPEARANCE -->
+    <div class="slide" id="slide-1">
+        <h1>Appearance</h1>
+        <p class="subtitle">Match the description with the correct picture number.</p>
+        
+        <div class="appearance-grid">
+            <div class="image-gallery" id="app-gallery">
+                <!-- JS generará las 9 imágenes -->
+            </div>
+            <div class="sentences-stack" id="app-sentences">
+                <!-- JS generará las oraciones -->
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="btn-check-app" onclick="checkAppearance()">Check Answers</button>
+            <button class="btn btn-success" id="btn-next-adj" style="display:none" onclick="goToSlide(2)">Go to Adjectives →</button>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: ADJECTIVES -->
+    <div class="slide" id="slide-2">
+        <h1>Adjectives & Opposites</h1>
+        <p class="subtitle">Complete the columns. Column 2 will unlock after Column 1 is correct.</p>
+
+        <div class="word-bank">
+            <div class="bank-box">
+                <h4>ADJECTIVES</h4>
+                <div class="tags" id="bank-adj"></div>
+            </div>
+            <div class="bank-box" id="bank-opp-container" style="display:none">
+                <h4>OPPOSITES</h4>
+                <div class="tags" id="bank-opp"></div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="50%">DEFINITION</th>
+                        <th>ADJECTIVE</th>
+                        <th>OPPOSITE</th>
+                    </tr>
+                </thead>
+                <tbody id="adj-table-body">
+                    <!-- JS generará las filas -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="btn-check-adj" onclick="checkAdjectives()">Check Adjectives</button>
+            <button class="btn" id="btn-check-opp" style="display:none" onclick="checkOpposites()">Check Opposites</button>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: RESULTS -->
+    <div class="slide" id="slide-3">
+        <h1>Excellent Job!</h1>
+        <p class="subtitle">Your results have been sent to your teacher.</p>
+        <div id="final-stats" style="text-align:center; font-size: 1.2rem; line-height: 2;"></div>
+        <div class="controls">
+            <button class="btn" onclick="location.reload()">Restart</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const DISCORD_WEBHOOK = "https://discordapp.com/api/webhooks/1469452628629913741/8cjv78gMP_1L7fqHF2jNMryW9o71dhNt3gNns5IkLjqGjmY0pvR59bNkeLqKR_-GyJnm";
+    
+    let studentName = "";
+    let scoreApp = 0;
+    let scoreAdj = 0;
+    let scoreOpp = 0;
+
+    const appearanceData = [
+        { q: "She has curly red hair.", a: "2" },
+        { q: "She has long straight hair.", a: "3" },
+        { q: "She has big blue eyes.", a: "1" },
+        { q: "She has dark wavy hair.", a: "6" },
+        { q: "He has a beard and a mustache.", a: "5" },
+        { q: "He’s bald.", a: "4" },
+        { q: "He’s very tall and thin.", a: "7" },
+        { q: "He’s short and a little overweight.", a: "9" },
+        { q: "He’s medium height and slim.", a: "8" }
+    ];
+
+    const adjectivesData = [
+        { def: "Open and warm", adj: "friendly", opp: "unfriendly" },
+        { def: "Talks a lot", adj: "talkative", opp: "quiet" },
+        { def: "Likes giving people things", adj: "generous", opp: "cheap" },
+        { def: "Friendly and good to others", adj: "kind", opp: "unkind" },
+        { def: "Doesn't want to work", adj: "lazy", opp: "hardworking" },
+        { def: "Makes people laugh", adj: "funny", opp: "serious" },
+        { def: "Quick at learning (intelligent)", adj: "smart", opp: "stupid" },
+        { def: "Can't talk easily to strangers", adj: "shy", opp: "extrovert" }
+    ];
+
+    // INICIAR
+    function startExercises() {
+        studentName = document.getElementById('student-name').value.trim();
+        if(!studentName) return alert("Please enter your name!");
+        goToSlide(1);
+        initAppearance();
+    }
+
+    function goToSlide(n) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById(`slide-${n}`).classList.add('active');
+        if(n === 2) initAdjectives();
+    }
+
+    // --- LOGICA APPEARANCE ---
+    function initAppearance() {
+        const gallery = document.getElementById('app-gallery');
+        const sentences = document.getElementById('app-sentences');
+        
+        for(let i=1; i<=9; i++){
+            gallery.innerHTML += `<div class="img-card">
+                <img src="https://ia600400.us.archive.org/33/items/7_20260319_20260319_2121/${i}.png">
+                <span>${i}</span>
+            </div>`;
+        }
+
+        appearanceData.forEach((item, idx) => {
+            sentences.innerHTML += `<div class="sentence-item">
+                <input type="text" maxlength="1" class="app-input" data-ans="${item.a}" inputmode="numeric">
+                <span>${item.q}</span>
+            </div>`;
+        });
+    }
+
+    function checkAppearance() {
+        let correct = 0;
+        document.querySelectorAll('.app-input').forEach(input => {
+            if(input.value.trim() === input.dataset.ans) {
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+                correct++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+        scoreApp = correct;
+        if(correct === 9) {
+            document.getElementById('btn-check-app').style.display = 'none';
+            document.getElementById('btn-next-adj').style.display = 'inline-block';
+        } else {
+            alert(`You got ${correct}/9 correct. Please check your answers.`);
+        }
+    }
+
+    // --- LOGICA ADJECTIVOS ---
+    function initAdjectives() {
+        const tableBody = document.getElementById('adj-table-body');
+        const bAdj = document.getElementById('bank-adj');
+        const bOpp = document.getElementById('bank-opp');
+
+        adjectivesData.forEach((item, idx) => {
+            tableBody.innerHTML += `<tr>
+                <td style="font-size: 0.85rem">${item.def}</td>
+                <td><input type="text" class="adj-field" data-idx="${idx}" oninput="syncBank()"></td>
+                <td><input type="text" class="opp-field" data-idx="${idx}" disabled oninput="syncBank()"></td>
+            </tr>`;
+        });
+
+        const adjs = adjectivesData.map(d => d.adj).sort();
+        const opps = adjectivesData.map(d => d.opp).sort();
+        
+        adjs.forEach(w => bAdj.innerHTML += `<span class="tag" id="tag-${w}">${w}</span>`);
+        opps.forEach(w => bOpp.innerHTML += `<span class="tag" id="tag-${w}">${w}</span>`);
+    }
+
+    function syncBank() {
+        document.querySelectorAll('.tag').forEach(t => t.classList.remove('used'));
+        document.querySelectorAll('.adj-field, .opp-field').forEach(input => {
+            const val = input.value.trim().toLowerCase();
+            const tag = document.getElementById(`tag-${val}`);
+            if(tag) tag.classList.add('used');
+        });
+    }
+
+    function checkAdjectives() {
+        let correct = 0;
+        document.querySelectorAll('.adj-field').forEach(input => {
+            const idx = input.dataset.idx;
+            if(input.value.trim().toLowerCase() === adjectivesData[idx].adj) {
+                input.classList.add('correct');
+                input.disabled = true;
+                correct++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+        scoreAdj = correct;
+        if(correct === 8) {
+            document.getElementById('btn-check-adj').style.display = 'none';
+            document.getElementById('btn-check-opp').style.display = 'inline-block';
+            document.getElementById('bank-opp-container').style.display = 'block';
+            document.querySelectorAll('.opp-field').forEach(i => i.disabled = false);
+            alert("Great! Now complete the opposites column.");
+        }
+    }
+
+    function checkOpposites() {
+        let correct = 0;
+        document.querySelectorAll('.opp-field').forEach(input => {
+            const idx = input.dataset.idx;
+            if(input.value.trim().toLowerCase() === adjectivesData[idx].opp) {
+                input.classList.add('correct');
+                input.disabled = true;
+                correct++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+        scoreOpp = correct;
+        if(correct === 8) {
+            sendFinalReport();
+        }
+    }
+
+    // --- REPORTE DISCORD ---
+    async function sendFinalReport() {
+        const statsDiv = document.getElementById('final-stats');
+        statsDiv.innerHTML = `
+            <p><strong>Appearance Score:</strong> ${scoreApp}/9</p>
+            <p><strong>Adjectives Score:</strong> ${scoreAdj}/8</p>
+            <p><strong>Opposites Score:</strong> ${scoreOpp}/8</p>
+        `;
+
+        const payload = {
+            embeds: [{
+                title: "🎓 Exercise Completed!",
+                color: 65280,
+                fields: [
+                    { name: "Student", value: studentName, inline: true },
+                    { name: "Appearance", value: `${scoreApp}/9`, inline: true },
+                    { name: "Adjectives", value: `${scoreAdj}/8`, inline: true },
+                    { name: "Opposites", value: `${scoreOpp}/8`, inline: true }
+                ],
+                timestamp: new Date()
+            }]
+        };
+
+        try {
+            await fetch(DISCORD_WEBHOOK, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+        } catch (error) {
+            console.error("Error sending to Discord:", error);
+        }
+
+        goToSlide(3);
+    }
+</script>
+
+</body>
+</html>
