@@ -261,7 +261,6 @@
 </div>
 
 <script>
-    const DISCORD_WEBHOOK = "https://discordapp.com/api/webhooks/1469452628629913741/8cjv78gMP_1L7fqHF2jNMryW9o71dhNt3gNns5IkLjqGjmY0pvR59bNkeLqKR_-GyJnm";
     
     let studentName = "";
     let scoreApp = 0;
